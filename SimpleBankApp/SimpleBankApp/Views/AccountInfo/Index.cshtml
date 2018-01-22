@@ -6,90 +6,94 @@
 }
 
 <h2 class="welcome-message">Welcome, @Model.AccountHolderId</h2>
+<div>
+    @{
 
-@{ 
-    foreach(var keyValuePair in Model.Accounts)
-    {
-        if (keyValuePair.Key == SimpleBankApp.Models.AccountType.Debit)
+        foreach (var keyValuePair in Model.Accounts)
         {
-            <h3> Debit Accounts</h3>
-        }
-        else if (keyValuePair.Key == SimpleBankApp.Models.AccountType.Loan)
-        {
-            <h3> Loan Accounts</h3>
-        }
-        <hr/>
+            if (keyValuePair.Key == SimpleBankApp.Models.AccountType.Debit)
+            {
+                <h3> Debit Accounts</h3>
+            }
+            else if (keyValuePair.Key == SimpleBankApp.Models.AccountType.Loan)
+            {
+                <h3> Loan Accounts</h3>
+            }
+            <hr />
 
-        <div class="container account-summary">
-            @{
-                if (!keyValuePair.Value.Any())
-                {
-                    if (keyValuePair.Key == SimpleBankApp.Models.AccountType.Debit)
+            if (!keyValuePair.Value.Any())
+            {
+                <div class="account-summary">
+                    @if (keyValuePair.Key == SimpleBankApp.Models.AccountType.Debit)
                     {
-                        <p> You have no debit accounts.</p>
+                    <h4> You have no debit accounts.</h4>
                     }
                     else if (keyValuePair.Key == SimpleBankApp.Models.AccountType.Loan)
                     {
-                        <h4> You have no loan accounts. </h4>
+                    <h4> You have no loan accounts. </h4>
                     }
+                </div>
+                continue;
+            }
 
-                    continue;
-                }
+            <div class="account-summary">
+                @{
+                    var totalAmountDict = new Dictionary<string, double>();
+                    foreach (var accountInfo in keyValuePair.Value)
+                    {
+                        <div>
+                            <p class="account-info">@accountInfo.AccountName - @accountInfo.AccountNumber</p>
 
-                var totalAmountDict = new Dictionary<string, double>();
-                foreach (var accountInfo in keyValuePair.Value)
-                {
-                    <div class="row">
-                        <p class="account-info">@accountInfo.AccountName - @accountInfo.AccountNumber</p>
+                            @{
+                                var formatProvider = new System.Globalization.CultureInfo(accountInfo.CurrencyUnit);
+                                var unit = accountInfo.CurrencyUnit == "en-us" ? "USD" : "CAD";
 
-                        @{
-                            var formatProvider = new System.Globalization.CultureInfo(accountInfo.CurrencyUnit);
-                            var unit = accountInfo.CurrencyUnit == "en-us" ? "USD" : "CAD";
-
-                            if (!totalAmountDict.ContainsKey(accountInfo.CurrencyUnit))
-                            {
-                                totalAmountDict.Add(accountInfo.CurrencyUnit, 0);
-                            }
-
-                            <p class="text-right">
-                                <span >Current Balance: </span>
-                                @{
-                                    totalAmountDict[accountInfo.CurrencyUnit] += accountInfo.CurrentBalance;
-                                    var currentBalance = accountInfo.CurrentBalance.ToString("C", formatProvider);
-                                    currentBalance = $"{currentBalance} {unit}";
+                                if (!totalAmountDict.ContainsKey(accountInfo.CurrencyUnit))
+                                {
+                                    totalAmountDict.Add(accountInfo.CurrencyUnit, 0);
                                 }
-                                <span >@currentBalance</span>
-                            </p>
 
-                            if (keyValuePair.Key == SimpleBankApp.Models.AccountType.Debit)
-                            {
                                 <p class="text-right">
-                                    <span>Available Balance: </span>
+                                    <span>Current Balance: </span>
                                     @{
-                                        var available = ((DebitAccountInfo)accountInfo).AvailableBalance.ToString("C", formatProvider);
-                                        available = $"{available} {unit}";
+                                        totalAmountDict[accountInfo.CurrencyUnit] += accountInfo.CurrentBalance;
+                                        var currentBalance = accountInfo.CurrentBalance.ToString("C", formatProvider);
+                                        currentBalance = $"{currentBalance} {unit}";
                                     }
-                                    <span>@available</span>
+                                    <span>@currentBalance</span>
                                 </p>
-                            }
-                            else if (keyValuePair.Key == SimpleBankApp.Models.AccountType.Loan)
-                            {
-                                <p class="text-right">
-                                    <span>Available Credit: </span>
-                                    @{
-                                        var creditAccount = (CreditAccountInfo)accountInfo;
-                                        var availableCreditNumber = creditAccount.TotalLimit - creditAccount.CurrentBalance;
-                                        var availableCredit = availableCreditNumber.ToString("C", formatProvider);
-                                        availableCredit = $"{availableCredit} {unit}";
-                                    }
-                                    <span>@availableCredit</span>
 
-                                </p>
+                                if (keyValuePair.Key == SimpleBankApp.Models.AccountType.Debit)
+                                {
+                                    <p class="text-right">
+                                        <span>Available Balance: </span>
+                                        @{
+                                            var available = ((DebitAccountInfo)accountInfo).AvailableBalance.ToString("C", formatProvider);
+                                            available = $"{available} {unit}";
+                                        }
+                                        <span>@available</span>
+                                    </p>
+                                }
+                                else if (keyValuePair.Key == SimpleBankApp.Models.AccountType.Loan)
+                                {
+                                    <p class="text-right">
+                                        <span>Available Credit: </span>
+                                        @{
+                                            var creditAccount = (CreditAccountInfo)accountInfo;
+                                            var availableCreditNumber = creditAccount.TotalLimit - creditAccount.CurrentBalance;
+                                            var availableCredit = availableCreditNumber.ToString("C", formatProvider);
+                                            availableCredit = $"{availableCredit} {unit}";
+                                        }
+                                        <span>@availableCredit</span>
+
+                                    </p>
+                                }
                             }
-                        }
-                        
-                    </div>
+
+                        </div>
+                    }
                 }
+                    
                 <hr />
                 <div class="row">
                     @{
@@ -104,10 +108,11 @@
                         }
                     }
                 </div>
-            }
-        </div>
+            </div>
 
-        <hr />
+            <hr />
+          }
     }
-}
+</div>
+
 

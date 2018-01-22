@@ -20,7 +20,7 @@ namespace SimpleBankApp.Controllers
         {
             if(ModelState.IsValid)
             {
-                return RedirectToAction("Index","AccountInfo", new { @userId = loginModel.UserId });
+                return RedirectToAction("Index","AccountInfo", new { @userId = loginModel.UserId.Trim() });
             }
 
             return View(loginModel);
