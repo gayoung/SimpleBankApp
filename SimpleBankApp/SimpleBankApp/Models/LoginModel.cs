@@ -10,7 +10,7 @@ namespace SimpleBankApp.Models
     {
         [Required(ErrorMessage = "User ID is required.")]
         [StringLength(20, MinimumLength = 8, ErrorMessage = "User ID must be 8-20 characters long.")]
-        [RegularExpression(@"^Katherine|Maximilian|Washington$", ErrorMessage = "Please input a valid user ID.")]
+        [RegularExpression(@"^(Katherine|Maximilian|Washington)\s*$", ErrorMessage = "Please input a valid user ID.")]
         public string UserId { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
