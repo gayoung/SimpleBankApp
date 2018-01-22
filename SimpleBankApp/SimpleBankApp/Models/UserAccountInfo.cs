@@ -17,6 +17,11 @@ namespace SimpleBankApp.Models
         public string AccountHolderId { get; set; }
         public Dictionary<AccountType,List<AccountInfo>> Accounts { get; set; }
 
+        public UserAccountInfo()
+        {
+            Accounts = new Dictionary<AccountType, List<AccountInfo>>();
+        }
+
         public UserAccountInfo(UserAccountData data)
         {
             AccountHolderId = data.AccountHolderId;
