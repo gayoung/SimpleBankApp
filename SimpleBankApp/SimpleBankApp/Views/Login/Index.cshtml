@@ -1,0 +1,28 @@
+﻿
+@model SimpleBankApp.Models.LoginModel
+@{
+    ViewBag.Title = "Edmonton Treasury Branches";
+    ViewBag.ShowLogout = false;
+}
+
+<div class="jumbotron">
+    <h1>Welcome to ETB!</h1>
+    <p class="lead">The most trusted bank in the entire western Canada!</p>
+</div>
+
+<div class="text-center form-signin">
+@using (Html.BeginForm("Index", "Login", FormMethod.Post))
+{
+        <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+        @Html.TextBoxFor(m => m.UserId, new { @class="form-control", placeholder="User ID"})
+        <p class="text-danger">@Html.ValidationMessageFor(m => m.UserId)</p>
+
+        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+        <p class="text-danger">@Html.ValidationMessageFor(m => m.Password)</p>
+
+        <button class="form-control btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+}
+</div>
+
+
+
